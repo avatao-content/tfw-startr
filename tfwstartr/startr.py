@@ -59,6 +59,12 @@ class Startr:
             pass  # TODO
 
         # delete .git folder
+        self.__cleanup_directory(
+            os.path.join(
+                self._workdir,
+                '.git'
+            )
+        )
         # git init
         self._git_helper.init_starter_repo(self._workdir)
         # zip + delete workdir (using as a ctx manager)
