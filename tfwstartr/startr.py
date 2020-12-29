@@ -2,6 +2,7 @@ import json
 import os
 import shutil
 import secrets
+import importlib.resources
 from functools import cached_property
 from typing import List, Dict, Optional
 from .utils import GitHelper
@@ -22,8 +23,8 @@ class Startr:
 
     @staticmethod
     def __load_starters():
-        with open("languages.json", "r") as f:
-            return json.loads(f.read())
+        data = importlib.resources.read_text(__package__, "languages.json")
+        return json.loads(data)
 
     @cached_property
     def languages(self):
