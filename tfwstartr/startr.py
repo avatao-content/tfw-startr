@@ -12,7 +12,7 @@ class Startr:
     def __init__(self) -> None:
         self._git_helper = GitHelper()
         self._languages = self.__load_starters()
-        self._workdir = ''
+        self._workdir = ""
 
     def __enter__(self):
         return self
@@ -22,39 +22,44 @@ class Startr:
 
     @staticmethod
     def __load_starters():
-        with open('languages.json', 'r') as f:
+        with open("languages.json", "r") as f:
             return json.loads(f.read())
 
     @cached_property
     def languages(self):
-        return self._languages # TODO: filter the extra JSON fields
+        return self._languages  # TODO: filter the extra JSON fields
 
-    def prepare_and_zip(self, language_name: str, framework_name: str, starter_name: str, extra_packages: Optional[List[Dict[str, str]]] = None) -> str:
-        repo_url: str = self._languages.get('languages').get(language_name).get('repo')
-        branch: str = self._languages.get('languages').get(language_name).get("frameworks").get(framework_name).get('starters').get(starter_name).get('branch')
-
-        self._workdir = os.path.join(
-            STARTER_WORKDIR,
-            secrets.token_hex(16)
+    def prepare_and_zip(
+        self,
+        language_name: str,
+        framework_name: str,
+        starter_name: str,
+        extra_packages: Optional[List[Dict[str, str]]] = None,
+    ) -> str:
+        repo_url: str = self._languages.get("languages").get(language_name).get("repo")
+        branch: str = (
+            self._languages.get("languages")
+            .get(language_name)
+            .get("frameworks")
+            .get(framework_name)
+            .get("starters")
+            .get(starter_name)
+            .get("branch")
         )
-        repo_dir: str = os.path.join(self._workdir, repo_url.split('/')[-1])
+
+        self._workdir = os.path.join(STARTER_WORKDIR, secrets.token_hex(16))
+        repo_dir: str = os.path.join(self._workdir, repo_url.split("/")[-1])
 
         # clone
-        self._git_helper.clone_repo(
-            repo_url,
-            self._workdir,
-            branch
-        )
-        
+        self._git_helper.clone_repo(repo_url, self._workdir, branch)
+
         # install extra_packages (if any)
         if extra_packages:
-            pass # TODO
+            pass  # TODO
 
         # delete .git folder
         # git init
-        self._git_helper.init_starter_repo(
-            self._workdir
-        )
+        self._git_helper.init_starter_repo(self._workdir)
         # zip + delete workdir (using as a ctx manager)
         return self.__generate_zip(repo_dir)
 
