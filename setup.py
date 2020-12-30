@@ -14,13 +14,13 @@ setup(
     description="Bootstrap TFW tutorials for the Avatao platform",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    install_requires=["requests >= 2.25.1", "GitPython >= 3.1.11"],
+    install_requires=["requests >= 2.25.1", "GitPython >= 3.1.11", "PyYaml >= 5.3.1"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
     package_data={
-        "": ["languages.json"],
+        "": ["languages.yaml"],
     },
 )
