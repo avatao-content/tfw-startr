@@ -48,7 +48,7 @@ class Startr:
             print(f'Repo dir is {repo_dir}')
             # clone
             self._git_helper.clone_repo(repo_url, workdir, branch)
-            print('Cloning done')
+            print(f'Cloning done, wokrdir content is: {os.listdir(workdir)}')
             # install extra_packages (if any)
             if extra_packages:
                 pass  # TODO
