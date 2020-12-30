@@ -44,21 +44,22 @@ class Startr:
         )
         with tempfile.TemporaryDirectory() as workdir:
             print(f'Workdir is {workdir}')
+            repo_dir = os.path.join('workdir', starter_name)
             # clone
-            self._git_helper.clone_repo(repo_url, workdir, branch)
-            print(f'Cloning done, wokrdir content is: {os.listdir(workdir)}')
+            self._git_helper.clone_repo(repo_url, repo_dir, branch)
+            print(f'Cloning done, wokrdir content is: {os.listdir(repo_dir)}')
             # install extra_packages (if any)
             if extra_packages:
                 pass  # TODO
 
             # delete .git folder
-            self.__cleanup_directory(os.path.join(workdir, ".git"))
-            print(f".git dir deleted at {os.path.join(workdir, '.git')}")
+            self.__cleanup_directory(os.path.join(repo_dir, ".git"))
+            print(f".git dir deleted at {os.path.join(repo_dir, '.git')}")
             # git init
-            self._git_helper.init_starter_repo(workdir)
-            print(f'.git init at {workdir}')
+            self._git_helper.init_starter_repo(repo_dir)
+            print(f'.git init at {repo_dir}')
             # zip
-            return self.__generate_zip(workdir)
+            return self.__generate_zip(repo_dir)
 
     @staticmethod
     def __cleanup_directory(dir_path: str) -> None:
