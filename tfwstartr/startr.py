@@ -2,6 +2,7 @@ import json
 import os
 import shutil
 import secrets
+import tempfile
 import importlib.resources
 from functools import cached_property
 from typing import List, Dict, Optional
@@ -14,7 +15,7 @@ class Startr:
     def __init__(self) -> None:
         self._git_helper = GitHelper()
         self._languages = self.__load_starters()
-        self._archive: str = ''
+        self._archive: str = ""
 
     def __enter__(self):
         return self
@@ -49,25 +50,30 @@ class Startr:
             .get(starter_name)
             .get("branch")
         )
-        
-        workdir = os.path.join(STARTER_WORKDIR, f'{starter_name}-{secrets.token_hex(6)}')
-        print(f'Workdir is {workdir}')
-        # clone
-        self._git_helper.clone_repo(repo_url, workdir, branch)
-        print(f'Cloning done, wokrdir content is: {os.listdir(workdir)}')
-        # install extra_packages (if any)
-        if extra_packages:
-            pass  # TODO
 
-        # delete .git folder
-        self.__cleanup_directory(os.path.join(workdir, ".git"))
-        print(f".git dir deleted at {os.path.join(workdir, '.git')}")
-        # git init
-        self._git_helper.init_starter_repo(workdir)
-        print(f'.git init at {workdir}')
-        # zip 
-        self._archive = self.__generate_zip(workdir)
-        return self._archive
+        with tempfile.TemporaryDirectory() as workdir:
+            print(f"Workdir is {workdir}")
+            # clone
+            self._git_helper.clone_repo(repo_url, workdir, branch)
+            print(f"Cloning done, wokrdir content is: {os.listdir(workdir)}")
+            # install extra_packages (if any)
+            if extra_packages:
+                pass  # TODO
+
+            # delete .git folder
+            self.__cleanup_directory(os.path.join(workdir, ".git"))
+            print(f".git dir deleted at {os.path.join(workdir, '.git')}")
+            # git init
+            self._git_helper.init_starter_repo(workdir)
+            print(f".git init at {workdir}")
+            # zip
+            self._archive = self.__generate_zip(
+                archive_name=os.path.join(
+                    STARTER_WORKDIR, f"{starter_name}-{secrets.token_hex(6)}"
+                ),
+                directory=workdir,
+            )
+            return self._archive
 
     @staticmethod
     def __cleanup_directory(dir_path: str) -> None:
@@ -75,9 +81,9 @@ class Startr:
             shutil.rmtree(dir_path)
 
     @staticmethod
-    def __generate_zip(dir_path: str) -> str:
+    def __generate_zip(archive_name: str, directory: str) -> str:
         return shutil.make_archive(
-            base_name=dir_path,
+            base_name=archive_name,
             format="zip",
-            root_dir=dir_path,
+            root_dir=directory,
         )
