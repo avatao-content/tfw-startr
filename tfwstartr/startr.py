@@ -2,12 +2,11 @@ import json
 import os
 import shutil
 import secrets
-import tempfile
 import importlib.resources
 from functools import cached_property
 from typing import List, Dict, Optional
-
 from git import repo
+from .config import STARTER_WORKDIR
 from .utils import GitHelper
 
 
@@ -15,6 +14,14 @@ class Startr:
     def __init__(self) -> None:
         self._git_helper = GitHelper()
         self._languages = self.__load_starters()
+        self._archive: str = ''
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, type, value, traceback):
+        if os.path.exists(self._archive):
+            os.remove(self._archive)
 
     @staticmethod
     def __load_starters():
@@ -42,24 +49,25 @@ class Startr:
             .get(starter_name)
             .get("branch")
         )
-        with tempfile.TemporaryDirectory() as workdir:
-            print(f'Workdir is {workdir}')
-            repo_dir = os.path.join(workdir, starter_name)
-            # clone
-            self._git_helper.clone_repo(repo_url, repo_dir, branch)
-            print(f'Cloning done, wokrdir content is: {os.listdir(repo_dir)}')
-            # install extra_packages (if any)
-            if extra_packages:
-                pass  # TODO
+        
+        workdir = os.path.join(STARTER_WORKDIR, f'{starter_name}-{secrets.token_hex(6)}')
+        print(f'Workdir is {workdir}')
+        # clone
+        self._git_helper.clone_repo(repo_url, workdir, branch)
+        print(f'Cloning done, wokrdir content is: {os.listdir(workdir)}')
+        # install extra_packages (if any)
+        if extra_packages:
+            pass  # TODO
 
-            # delete .git folder
-            self.__cleanup_directory(os.path.join(repo_dir, ".git"))
-            print(f".git dir deleted at {os.path.join(repo_dir, '.git')}")
-            # git init
-            self._git_helper.init_starter_repo(repo_dir)
-            print(f'.git init at {repo_dir}')
-            # zip
-            return self.__generate_zip(repo_dir)
+        # delete .git folder
+        self.__cleanup_directory(os.path.join(workdir, ".git"))
+        print(f".git dir deleted at {os.path.join(workdir, '.git')}")
+        # git init
+        self._git_helper.init_starter_repo(workdir)
+        print(f'.git init at {workdir}')
+        # zip 
+        self._archive = self.__generate_zip(workdir)
+        return self._archive
 
     @staticmethod
     def __cleanup_directory(dir_path: str) -> None:
