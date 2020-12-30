@@ -13,4 +13,6 @@ class PipInstallStrategy(InstallStrategy):
             os.path.join(workdir, "solvable/webservice", "requirements.txt"), "a"
         ) as requirements:
             for package in packages:
-                requirements.write(f"{package.get('name')}=={package.get('version')}\n")
+                if not requirements.read().endswith('\n'):
+                    requirements.write('\n')
+                requirements.write(f"{package.get('name')}=={package.get('version')}")
