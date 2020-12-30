@@ -10,9 +10,11 @@ languages:
           Hello-world:
             name: Hello world
             branch: master
+            package_manager: pip
           SecFlix:
             name: SecFlix
             branch: secflix
+            package_manager: pip
   Node.js:
     name: Node.js
     repo: https://github.com/avatao-content/tutorial-node
@@ -23,6 +25,8 @@ languages:
           Hello-world:
             name: Hello world
             branch: master
+            package_manager: npm
           Nodify:
             name: Nodify
             branch: nodify
+            package_manager: npm

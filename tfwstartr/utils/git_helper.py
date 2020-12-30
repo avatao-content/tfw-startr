@@ -1,4 +1,5 @@
-from typing import Optional
+from typing import Optional, Union
+from pathlib import Path
 from git import Repo
 
 
@@ -15,7 +16,7 @@ class GitHelper:
 
     def init_starter_repo(
         self,
-        repo_dir: str,
+        repo_dir: Union[str, Path],
         user_name: str = "startR",
         user_email: str = "support@avatao.com",
         init_message: Optional[str] = None,
@@ -29,7 +30,9 @@ class GitHelper:
         )
 
     @staticmethod
-    def clone_repo(repo_url: str, repo_dir: str, branch: Optional[str] = None) -> None:
+    def clone_repo(
+        repo_url: str, repo_dir: Union[str, Path], branch: Optional[str] = None
+    ) -> None:
         repo = Repo.clone_from(repo_url, repo_dir)
         if branch:
             repo.git.checkout(branch)
