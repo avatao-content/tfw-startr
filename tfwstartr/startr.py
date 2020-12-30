@@ -44,7 +44,7 @@ class Startr:
         )
         with tempfile.TemporaryDirectory() as workdir:
             print(f'Workdir is {workdir}')
-            repo_dir = os.path.join('workdir', starter_name)
+            repo_dir = os.path.join(workdir, starter_name)
             # clone
             self._git_helper.clone_repo(repo_url, repo_dir, branch)
             print(f'Cloning done, wokrdir content is: {os.listdir(repo_dir)}')
