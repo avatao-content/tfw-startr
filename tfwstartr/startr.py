@@ -1,4 +1,4 @@
-import json
+import yaml
 import os
 import shutil
 import secrets
@@ -26,8 +26,8 @@ class Startr:
 
     @staticmethod
     def __load_starters():
-        data = importlib.resources.read_text(__package__, "languages.json")
-        return json.loads(data)
+        data = importlib.resources.read_text(__package__, "languages.yaml")
+        return yaml.safe_load(data)
 
     @cached_property
     def languages(self):
@@ -52,21 +52,12 @@ class Startr:
         )
 
         with tempfile.TemporaryDirectory() as workdir:
-            print(f"Workdir is {workdir}")
-            # clone
             self._git_helper.clone_repo(repo_url, workdir, branch)
-            print(f"Cloning done, wokrdir content is: {os.listdir(workdir)}")
-            # install extra_packages (if any)
             if extra_packages:
                 pass  # TODO
 
-            # delete .git folder
             self.__cleanup_directory(os.path.join(workdir, ".git"))
-            print(f".git dir deleted at {os.path.join(workdir, '.git')}")
-            # git init
             self._git_helper.init_starter_repo(workdir)
-            print(f".git init at {workdir}")
-            # zip
             self._archive = self.__generate_zip(
                 archive_name=os.path.join(
                     STARTER_WORKDIR, f"{starter_name}-{secrets.token_hex(6)}"
