@@ -24,7 +24,7 @@ class GitHelper:
         with repo.config_writer() as config:
             config.set_value("user", "name", user_name)
             config.set_value("user", "email", user_email)
-        GitHelper._add_and_commit(
+        self._add_and_commit(
             repo, init_message or self._default_init_message, user_name, user_email
         )
 

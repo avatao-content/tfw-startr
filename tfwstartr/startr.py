@@ -2,24 +2,17 @@ import json
 import os
 import shutil
 import secrets
+import tempfile
 import importlib.resources
 from functools import cached_property
 from typing import List, Dict, Optional
 from .utils import GitHelper
-from .config import STARTER_WORKDIR
 
 
 class Startr:
     def __init__(self) -> None:
         self._git_helper = GitHelper()
         self._languages = self.__load_starters()
-        self._workdir = ""
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, type, value, traceback):
-        self.__cleanup_directory(self._workdir)
 
     @staticmethod
     def __load_starters():
@@ -47,28 +40,21 @@ class Startr:
             .get(starter_name)
             .get("branch")
         )
+        with tempfile.TemporaryDirectory() as workdir:
+            repo_dir: str = os.path.join(workdir, repo_url.split("/")[-1])
+            # clone
+            self._git_helper.clone_repo(repo_url, workdir, branch)
 
-        self._workdir = os.path.join(STARTER_WORKDIR, secrets.token_hex(16))
-        repo_dir: str = os.path.join(self._workdir, repo_url.split("/")[-1])
+            # install extra_packages (if any)
+            if extra_packages:
+                pass  # TODO
 
-        # clone
-        self._git_helper.clone_repo(repo_url, self._workdir, branch)
-
-        # install extra_packages (if any)
-        if extra_packages:
-            pass  # TODO
-
-        # delete .git folder
-        self.__cleanup_directory(
-            os.path.join(
-                self._workdir,
-                '.git'
-            )
-        )
-        # git init
-        self._git_helper.init_starter_repo(self._workdir)
-        # zip + delete workdir (using as a ctx manager)
-        return self.__generate_zip(repo_dir)
+            # delete .git folder
+            self.__cleanup_directory(os.path.join(workdir, ".git"))
+            # git init
+            self._git_helper.init_starter_repo(workdir)
+            # zip + delete workdir (using as a ctx manager)
+            return self.__generate_zip(repo_dir)
 
     @staticmethod
     def __cleanup_directory(dir_path: str) -> None:
