@@ -6,7 +6,9 @@ from typing import Dict, Union
 class InstallStrategy(ABC):
     @staticmethod
     @abstractmethod
-    def install_packages(workdir: Union[str, Path], packages: Dict[str, str]) -> None:
+    def install_packages(
+        workdir: Union[str, Path], dependency_file: str, packages: Dict[str, str]
+    ) -> None:
         pass
 
     @staticmethod

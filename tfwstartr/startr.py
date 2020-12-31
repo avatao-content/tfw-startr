@@ -97,6 +97,15 @@ class Startr:
             .get(starter_name)
             .get("package_manager")
         )
+        dependency_file: str = (
+            self.languages.get("languages")
+            .get(language_name)
+            .get("frameworks")
+            .get(framework_name)
+            .get("starters")
+            .get(starter_name)
+            .get("dependency_file")
+        )
 
         with tempfile.TemporaryDirectory() as workdir:
             self._git_helper.clone_repo(repo_url, workdir, branch)
@@ -104,6 +113,7 @@ class Startr:
                 PackageManager.install_packages(
                     workdir=workdir,
                     packages=extra_packages,
+                    dependency_file=dependency_file,
                     package_manager=package_manager,
                 )
 

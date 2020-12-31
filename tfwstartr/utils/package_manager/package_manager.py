@@ -6,10 +6,15 @@ from .strategies import strategy_mapping
 class PackageManager:
     @staticmethod
     def install_packages(
-        workdir: Union[str, Path], packages: Dict[str, str], package_manager: str
+        workdir: Union[str, Path],
+        dependency_file: str,
+        packages: Dict[str, str],
+        package_manager: str,
     ) -> None:
         strategy = strategy_mapping.get(package_manager)
-        strategy.install_packages(workdir=workdir, packages=packages)
+        strategy.install_packages(
+            workdir=workdir, dependency_file=dependency_file, packages=packages
+        )
 
     @staticmethod
     def get_required_packages(
