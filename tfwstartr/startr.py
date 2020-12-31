@@ -8,13 +8,13 @@ from functools import cached_property
 from typing import List, Dict, Optional, Union
 from pathlib import Path
 from .config import STARTER_WORKDIR
-from .utils import GitHelper, PackageInstaller
+from .utils import GitHelper, PackageManager
 
 
 class Startr:
     def __init__(self) -> None:
         self._git_helper = GitHelper()
-        self._package_installer = PackageInstaller
+        self._package_manager = PackageManager
         self._languages = self.__load_starters()
         self._archive: Union[str, Path] = ""
 
@@ -64,7 +64,7 @@ class Startr:
         with tempfile.TemporaryDirectory() as workdir:
             self._git_helper.clone_repo(repo_url, workdir, branch)
             if extra_packages:
-                self._package_installer.install_packages(
+                self._package_manager.install_packages(
                     workdir=workdir,
                     packages=extra_packages,
                     package_manager=package_manager,
