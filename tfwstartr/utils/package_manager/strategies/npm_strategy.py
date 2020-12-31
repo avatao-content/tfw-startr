@@ -12,7 +12,7 @@ class NpmStrategy(PackageManagerStrategy):
     ) -> None:
         with open(os.path.join(workdir, dependency_file), "r") as requirements:
             packagejson = json.loads(requirements.read())
-        for name, version in packages:
+        for name, version in packages.items():
             packagejson["dependencies"][name] = f"^{version}"
         with open(os.path.join(workdir, dependency_file), "w+") as requirements:
             requirements.write(json.dumps(packagejson, indent=2))
