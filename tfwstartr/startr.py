@@ -78,9 +78,10 @@ class Startr:
         starter_name: str,
         extra_packages: Optional[Dict[str, str]] = None,
     ) -> Union[str, Path]:
-        repo_url: str = self.languages.get("languages").get(language_name).get("repo")
+        starters = self.__load_starters()
+        repo_url: str = starters.get("languages").get(language_name).get("repo")
         branch: str = (
-            self.languages.get("languages")
+            starters.get("languages")
             .get(language_name)
             .get("frameworks")
             .get(framework_name)
@@ -89,7 +90,7 @@ class Startr:
             .get("branch")
         )
         package_manager: str = (
-            self.languages.get("languages")
+            starters.get("languages")
             .get(language_name)
             .get("frameworks")
             .get(framework_name)
@@ -98,7 +99,7 @@ class Startr:
             .get("package_manager")
         )
         dependency_file: str = (
-            self.languages.get("languages")
+            starters.get("languages")
             .get(language_name)
             .get("frameworks")
             .get(framework_name)
