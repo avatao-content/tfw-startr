@@ -10,7 +10,7 @@ class NpmStrategy(PackageManagerStrategy):
     def install_packages(
         workdir: Union[str, Path], dependency_file: str, packages: Dict[str, str]
     ) -> None:
-        with open(os.path.join(workdir, dependency_file), "a") as requirements:
+        with open(os.path.join(workdir, dependency_file), "r") as requirements:
             packagejson = json.loads(requirements.read())
         for name, version in packages:
             packagejson["dependencies"][name] = f"^{version}"

@@ -10,11 +10,11 @@ class PipStrategy(PackageManagerStrategy):
         workdir: Union[str, Path], dependency_file: str, packages: Dict[str, str]
     ) -> None:
         print(f'Requirements at {os.path.join(workdir, dependency_file)}')
-        with open(os.path.join(workdir, dependency_file), "a") as requirements:
-            for name, version in packages:
-                if not requirements.read().endswith("\n"):
+        with open(os.path.join(workdir, dependency_file), "a+") as requirements:
+            if not requirements.read().endswith("\n"):
                     requirements.write("\n")
-                requirements.write(f"{name}=={version}")
+            for name, version in packages:
+                requirements.write(f"{name}=={version}\n")
 
     @staticmethod
     def get_packages_from_file(file_content: str) -> Dict[str, str]:
