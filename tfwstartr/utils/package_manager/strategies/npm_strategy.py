@@ -2,10 +2,10 @@ import os
 import json
 from typing import Dict, Union
 from pathlib import Path
-from .strategy_base import InstallStrategy
+from .strategy_base import PackageManagerStrategy
 
 
-class NpmInstallStrategy(InstallStrategy):
+class NpmStrategy(PackageManagerStrategy):
     @staticmethod
     def install_packages(
         workdir: Union[str, Path], dependency_file: str, packages: Dict[str, str]

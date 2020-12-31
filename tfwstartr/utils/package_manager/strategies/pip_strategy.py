@@ -1,10 +1,10 @@
 import os
 from typing import Dict, Union
 from pathlib import Path
-from .strategy_base import InstallStrategy
+from .strategy_base import PackageManagerStrategy
 
 
-class PipInstallStrategy(InstallStrategy):
+class PipStrategy(PackageManagerStrategy):
     @staticmethod
     def install_packages(
         workdir: Union[str, Path], dependency_file: str, packages: Dict[str, str]

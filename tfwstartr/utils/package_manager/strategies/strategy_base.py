@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, Union
 
 
-class InstallStrategy(ABC):
+class PackageManagerStrategy(ABC):
     @staticmethod
     @abstractmethod
     def install_packages(
