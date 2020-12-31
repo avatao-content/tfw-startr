@@ -3,6 +3,7 @@ import os
 import shutil
 import secrets
 import tempfile
+import requests
 import importlib.resources
 from functools import cached_property
 from typing import Dict, Optional, Union
@@ -14,8 +15,6 @@ from .utils import GitHelper, PackageManager
 class Startr:
     def __init__(self) -> None:
         self._git_helper = GitHelper()
-        self._package_manager = PackageManager
-        self._languages = self.__load_starters()
         self._archive: Union[str, Path] = ""
 
     def __enter__(self):
@@ -32,18 +31,56 @@ class Startr:
 
     @cached_property
     def languages(self):
-        return self._languages  # TODO: filter the extra JSON fields
+        return self.__load_starters  # TODO: filter the extra JSON fields
 
-    def prepare_and_zip(
+    @classmethod
+    def get_starter_requirements(
+        cls, language_name: str, framework_name: str, starter_name: str
+    ) -> Dict[str, str]:
+        starters = cls.__load_starters()
+        repo_url: str = starters.get("languages").get(language_name).get("repo")
+        branch: str = (
+            starters.get("languages")
+            .get(language_name)
+            .get("frameworks")
+            .get(framework_name)
+            .get("starters")
+            .get(starter_name)
+            .get("branch")
+        )
+        dependency_file: str = (
+            starters.get("languages")
+            .get(language_name)
+            .get("frameworks")
+            .get(framework_name)
+            .get("starters")
+            .get(starter_name)
+            .get("dependency_file")
+        )
+        package_manager: str = (
+            starters.get("languages")
+            .get(language_name)
+            .get("frameworks")
+            .get(framework_name)
+            .get("starters")
+            .get(starter_name)
+            .get("package_manager")
+        )
+        return PackageManager.get_required_packages(
+            file_content=cls.__get_file_content(repo_url, branch, dependency_file),
+            package_manager=package_manager,
+        )
+
+    def generate_starter(
         self,
         language_name: str,
         framework_name: str,
         starter_name: str,
         extra_packages: Optional[Dict[str, str]] = None,
     ) -> Union[str, Path]:
-        repo_url: str = self._languages.get("languages").get(language_name).get("repo")
+        repo_url: str = self.languages.get("languages").get(language_name).get("repo")
         branch: str = (
-            self._languages.get("languages")
+            self.languages.get("languages")
             .get(language_name)
             .get("frameworks")
             .get(framework_name)
@@ -52,7 +89,7 @@ class Startr:
             .get("branch")
         )
         package_manager: str = (
-            self._languages.get("languages")
+            self.languages.get("languages")
             .get(language_name)
             .get("frameworks")
             .get(framework_name)
@@ -64,7 +101,7 @@ class Startr:
         with tempfile.TemporaryDirectory() as workdir:
             self._git_helper.clone_repo(repo_url, workdir, branch)
             if extra_packages:
-                self._package_manager.install_packages(
+                PackageManager.install_packages(
                     workdir=workdir,
                     packages=extra_packages,
                     package_manager=package_manager,
@@ -94,3 +131,8 @@ class Startr:
             format="zip",
             root_dir=directory,
         )
+
+    @staticmethod
+    def __get_file_content(repo: str, branch: str, dependency_file: str) -> str:
+        url = f"{repo.replace('github.com', 'raw.githubusercontent.com')}/{branch}/{dependency_file}"
+        return requests.get(url).text

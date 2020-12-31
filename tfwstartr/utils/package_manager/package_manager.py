@@ -12,6 +12,8 @@ class PackageManager:
         strategy.install_packages(workdir=workdir, packages=packages)
 
     @staticmethod
-    def get_required_packages(file_content: str, package_manager: str) -> Dict[str, str]:
+    def get_required_packages(
+        file_content: str, package_manager: str
+    ) -> Dict[str, str]:
         strategy = strategy_mapping.get(package_manager)
         return strategy.get_packages_from_file(file_content)
