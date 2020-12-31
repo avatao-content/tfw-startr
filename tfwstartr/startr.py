@@ -5,7 +5,7 @@ import secrets
 import tempfile
 import importlib.resources
 from functools import cached_property
-from typing import List, Dict, Optional, Union
+from typing import Dict, Optional, Union
 from pathlib import Path
 from .config import STARTER_WORKDIR
 from .utils import GitHelper, PackageManager
@@ -39,7 +39,7 @@ class Startr:
         language_name: str,
         framework_name: str,
         starter_name: str,
-        extra_packages: Optional[List[Dict[str, str]]] = None,
+        extra_packages: Optional[Dict[str, str]] = None,
     ) -> Union[str, Path]:
         repo_url: str = self._languages.get("languages").get(language_name).get("repo")
         branch: str = (

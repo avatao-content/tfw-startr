@@ -10,10 +10,12 @@ languages:
           Hello-world:
             name: Hello world
             branch: master
+            dependency_file: solvable/webservice/requirements.txt
             package_manager: pip
           SecFlix:
             name: SecFlix
             branch: secflix
+            dependency_file: solvable/webservice/requirements.txt
             package_manager: pip
   Node.js:
     name: Node.js
@@ -25,8 +27,10 @@ languages:
           Hello-world:
             name: Hello world
             branch: master
+            dependency_file: solvable/webservice/package.json
             package_manager: npm
           Nodify:
             name: Nodify
             branch: nodify
+            dependency_file: solvable/webservice/package.json
             package_manager: npm
