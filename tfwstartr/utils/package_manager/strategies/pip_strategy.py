@@ -9,6 +9,7 @@ class PipStrategy(PackageManagerStrategy):
     def install_packages(
         workdir: Union[str, Path], dependency_file: str, packages: Dict[str, str]
     ) -> None:
+        print(f'Requirements at {os.path.join(workdir, dependency_file)}')
         with open(os.path.join(workdir, dependency_file), "a") as requirements:
             for name, version in packages:
                 if not requirements.read().endswith("\n"):
