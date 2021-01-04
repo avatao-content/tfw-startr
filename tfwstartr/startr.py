@@ -26,7 +26,7 @@ class Startr:
 
     @staticmethod
     def __load_starters():
-        data = importlib.resources.read_text(__package__, "languages.yaml")
+        data = importlib.resources.read_text(__package__, "data/languages.yaml")
         return yaml.safe_load(data)
 
     @cached_property
