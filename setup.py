@@ -8,7 +8,6 @@ setup(
     version="1.0.0",
     author="Avatao.com Innovative Learning Kft.",
     author_email="support@avatao.com",
-    packages=find_packages(),
     url="https://github.com/avatao-content/tfw-startr",
     license="Apache License 2.0",
     description="Bootstrap TFW tutorials for the Avatao platform",
@@ -20,6 +19,7 @@ setup(
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
+    packages=find_packages(),
     package_data={
         "": ["data/*.yaml"],
     },
