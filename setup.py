@@ -21,6 +21,6 @@ setup(
         "Operating System :: OS Independent",
     ],
     package_data={
-        "": ["data/*"],
+        "": ["data/*.yaml"],
     },
 )
