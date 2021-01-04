@@ -25,13 +25,9 @@ class Startr:
             os.remove(self._archive)
 
     @staticmethod
-    def __load_starters():
+    def get_starters():
         data = importlib.resources.read_text(DATA_FOLDER, "languages.yaml")
         return yaml.safe_load(data)
-
-    @cached_property
-    def languages(self):
-        return self.__load_starters  # TODO: filter the extra JSON fields
 
     @staticmethod
     def get_supported_packages(package_manager: str) -> Dict[str, str]:
@@ -41,11 +37,10 @@ class Startr:
     def get_starter_requirements(
         cls, language_name: str, framework_name: str, starter_name: str
     ) -> Dict[str, str]:
-        starters = cls.__load_starters()
-        repo_url: str = starters.get("languages").get(language_name).get("repo")
+        starters = cls.get_starters()
+        repo_url: str = starters.get(language_name).get("repo")
         branch: str = (
-            starters.get("languages")
-            .get(language_name)
+            starters.get(language_name)
             .get("frameworks")
             .get(framework_name)
             .get("starters")
@@ -53,8 +48,7 @@ class Startr:
             .get("branch")
         )
         dependency_file: str = (
-            starters.get("languages")
-            .get(language_name)
+            starters.get(language_name)
             .get("frameworks")
             .get(framework_name)
             .get("starters")
@@ -62,8 +56,7 @@ class Startr:
             .get("dependency_file")
         )
         package_manager: str = (
-            starters.get("languages")
-            .get(language_name)
+            starters.get(language_name)
             .get("frameworks")
             .get(framework_name)
             .get("starters")
@@ -82,11 +75,10 @@ class Startr:
         starter_name: str,
         extra_packages: Optional[Dict[str, str]] = None,
     ) -> Union[str, Path]:
-        starters = self.__load_starters()
-        repo_url: str = starters.get("languages").get(language_name).get("repo")
+        starters = self.get_starters()
+        repo_url: str = starters.get(language_name).get("repo")
         branch: str = (
-            starters.get("languages")
-            .get(language_name)
+            starters.get(language_name)
             .get("frameworks")
             .get(framework_name)
             .get("starters")
@@ -94,8 +86,7 @@ class Startr:
             .get("branch")
         )
         package_manager: str = (
-            starters.get("languages")
-            .get(language_name)
+            starters.get(language_name)
             .get("frameworks")
             .get(framework_name)
             .get("starters")
@@ -103,8 +94,7 @@ class Startr:
             .get("package_manager")
         )
         dependency_file: str = (
-            starters.get("languages")
-            .get(language_name)
+            starters.get(language_name)
             .get("frameworks")
             .get(framework_name)
             .get("starters")
