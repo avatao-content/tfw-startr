@@ -11,7 +11,7 @@ class PipStrategy(PackageManagerStrategy):
     ) -> None:
         with open(os.path.join(workdir, dependency_file), "a+") as requirements:
             if not requirements.read().endswith("\n"):
-                    requirements.write("\n")
+                requirements.write("\n")
             for name, version in packages.items():
                 requirements.write(f"{name}=={version}\n")
 

@@ -8,8 +8,8 @@ import importlib.resources
 from functools import cached_property
 from typing import Dict, Optional, Union
 from pathlib import Path
-from .config import STARTER_WORKDIR
-from .utils import GitHelper, PackageManager
+from tfwstartr.config import STARTER_WORKDIR, DATA_FOLDER
+from tfwstartr.utils import GitHelper, PackageManager
 
 
 class Startr:
@@ -26,12 +26,16 @@ class Startr:
 
     @staticmethod
     def __load_starters():
-        data = importlib.resources.read_text(f"{__package__}.data", "languages.yaml")
+        data = importlib.resources.read_text(DATA_FOLDER, "languages.yaml")
         return yaml.safe_load(data)
 
     @cached_property
     def languages(self):
         return self.__load_starters  # TODO: filter the extra JSON fields
+
+    @staticmethod
+    def get_supported_packages(package_manager: str) -> Dict[str, str]:
+        return PackageManager.get_supported_packages(package_manager)
 
     @classmethod
     def get_starter_requirements(
