@@ -69,10 +69,18 @@ class Startr:
         )
 
     @classmethod
-    def get_starter_info(cls, language_name: str, framework_name: str, starter_name: str, package_manager: str) -> Dict[str, Dict[str, str]]:
+    def get_starter_info(
+        cls,
+        language_name: str,
+        framework_name: str,
+        starter_name: str,
+        package_manager: str,
+    ) -> Dict[str, Dict[str, str]]:
         return {
-            'required': cls.get_starter_requirements(language_name, framework_name, starter_name),
-            'optional': cls.get_supported_packages(package_manager)
+            "required": cls.get_starter_requirements(
+                language_name, framework_name, starter_name
+            ),
+            "optional": cls.get_supported_packages(package_manager),
         }
 
     def generate_starter(
