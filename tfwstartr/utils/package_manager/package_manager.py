@@ -32,4 +32,4 @@ class PackageManager:
             data = importlib.resources.read_text(DATA_FOLDER, f"{package_manager}.yaml")
         except:
             return {}
-        return yaml.safe_load(data)
+        return yaml.safe_load(data).get("packages")
