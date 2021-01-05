@@ -76,7 +76,7 @@ class Startr:
         starter_name: str,
     ) -> Dict[str, Dict[str, str]]:
         package_manager: str = (
-            cls.get_starters.get(language_name)
+            cls.get_starters().get(language_name)
             .get("frameworks")
             .get(framework_name)
             .get("starters")
