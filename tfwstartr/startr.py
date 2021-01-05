@@ -25,7 +25,7 @@ class Startr:
             os.remove(self._archive)
 
     @staticmethod
-    def get_starters():
+    def get_starters() -> Dict:
         data = importlib.resources.read_text(DATA_FOLDER, "languages.yaml")
         return yaml.safe_load(data)
 
@@ -67,6 +67,13 @@ class Startr:
             file_content=cls.__get_file_content(repo_url, branch, dependency_file),
             package_manager=package_manager,
         )
+
+    @classmethod
+    def get_starter_info(cls, language_name: str, framework_name: str, starter_name: str, package_manager: str) -> Dict[str, Dict[str, str]]:
+        return {
+            'required': cls.get_starter_requirements(language_name, framework_name, starter_name),
+            'optional': cls.get_supported_packages(package_manager)
+        }
 
     def generate_starter(
         self,
