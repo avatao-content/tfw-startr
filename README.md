@@ -3,7 +3,7 @@ Python package for bootstrapping TFW tutorials
 
 ### Usage
 
-```
+```python
 from tfwstartr import Startr
 
 # Get available templates
