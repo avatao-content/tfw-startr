@@ -1,7 +1,6 @@
 ---
-mandatory:
+packages:
   - "@avatao/tfwsdk": 1.0.3
-optional:
   - express: 4.17.1
   - classnames: 2.2.6
   - downloadjs: 1.4.7
