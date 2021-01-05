@@ -74,8 +74,15 @@ class Startr:
         language_name: str,
         framework_name: str,
         starter_name: str,
-        package_manager: str,
     ) -> Dict[str, Dict[str, str]]:
+        package_manager: str = (
+            cls.get_starters.get(language_name)
+            .get("frameworks")
+            .get(framework_name)
+            .get("starters")
+            .get(starter_name)
+            .get("package_manager")
+        )
         return {
             "required": cls.get_starter_requirements(
                 language_name, framework_name, starter_name
