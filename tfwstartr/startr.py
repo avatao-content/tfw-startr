@@ -138,7 +138,7 @@ class Startr:
             self._git_helper.init_starter_repo(workdir)
             self._archive = self.__generate_zip(
                 archive_name=os.path.join(
-                    STARTER_WORKDIR, f"{starter_name}-{secrets.token_hex(6)}"
+                    STARTER_WORKDIR, f"{starter_name.lower()}-{secrets.token_hex(6)}"
                 ),
                 directory=workdir,
             )
